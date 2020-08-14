@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ChameleonInstancingObj.cs" />
+    <Compile Include="Assets\ChameleonRender.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/Projects/ChameleonInstancing/ChameleonInstancing/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
