@@ -11,10 +11,11 @@ public class ChameleonInstancingObj : MonoBehaviour
 {
     public Renderer[] renders;
 
-    private List<Mesh> meshs = new List<Mesh>();
+    public readonly List<Mesh> meshs = new List<Mesh>();
+    public Mesh finalMesh = null;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         foreach(var render in renders)
         {
@@ -25,6 +26,7 @@ public class ChameleonInstancingObj : MonoBehaviour
             }
         }
 
+        List<CombineInstance> combineInsts = new List<CombineInstance>();
         for(int meshIdx=0,meshMax=meshs.Count;meshIdx<meshMax;meshIdx++)
         {
             var mesh = meshs[meshIdx];
@@ -35,9 +37,17 @@ public class ChameleonInstancingObj : MonoBehaviour
                 tagUV[i] = new Vector2(meshId, meshId);
             }
             mesh.uv8 = tagUV;
+            var combineInst = new CombineInstance();
+            combineInst.mesh = mesh;
+            combineInsts.Add(combineInst);
         }
+        Mesh meshCombined  = new Mesh();
+        meshCombined.CombineMeshes(combineInsts.ToArray());
+        meshCombined.UploadMeshData(false);
+        finalMesh = meshCombined;
     }
 
+    
     // Update is called once per frame
     void Update()
     {
