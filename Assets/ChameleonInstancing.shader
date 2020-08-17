@@ -20,12 +20,12 @@
             #pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
-
+            #pragma target 3.0
             struct appdata
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
-                float2 uv8 : TEXCOORD2;
+                float2 uv8 : TEXCOORD7;
                 DEFAULT_UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -34,6 +34,7 @@
                 float2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                fixed4 color : TEXCOORD1;
             };
 
             sampler2D _MainTex;
@@ -47,10 +48,11 @@
                 UNITY_SETUP_INSTANCE_ID(v);
                 v2f o;
                 float meshID = UNITY_ACCESS_INSTANCED_PROP(_Chameleon, _MeshID);
-                float fclip = saturate(1 - 100 * abs(v.uv8.x - meshID));
+                float fclip = saturate(1000 * abs(v.uv8.x - meshID));
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                //o.vertex.y += fclip * 2;
+                o.vertex.y += fclip * 1.5 * o.vertex.w;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.color.r = fclip;// = v.uv8.rg;
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
@@ -59,6 +61,7 @@
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
+                return i.color;
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;

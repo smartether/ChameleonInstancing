@@ -7,6 +7,7 @@ using UnityEngine;
 /// solution 2: distinct meshID by vertexID in vertexProgram
 /// </summary>
 
+[ExecuteInEditMode()]
 public class ChameleonInstancingObj : MonoBehaviour
 {
     public Renderer[] renders;
@@ -36,9 +37,11 @@ public class ChameleonInstancingObj : MonoBehaviour
                 float meshId = meshIdx / (float)meshMax;
                 tagUV[i] = new Vector2(meshId, meshId);
             }
-            mesh.uv8 = tagUV;
+            mesh.uv3 = tagUV;
+            var matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
             var combineInst = new CombineInstance();
             combineInst.mesh = mesh;
+            combineInst.transform = matrix;            
             combineInsts.Add(combineInst);
         }
         Mesh meshCombined  = new Mesh();
@@ -51,6 +54,6 @@ public class ChameleonInstancingObj : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
