@@ -50,7 +50,7 @@
                 float meshID = UNITY_ACCESS_INSTANCED_PROP(_Chameleon, _MeshID);
                 float fclip = saturate(1000 * abs(v.uv8.x - meshID));
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.vertex.y += fclip * 1.5 * o.vertex.w;
+                o.vertex.y += fclip * (1.00 + abs(o.vertex.y)) * o.vertex.w;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.color.r = fclip;// = v.uv8.rg;
                 UNITY_TRANSFER_FOG(o,o.vertex);
@@ -61,7 +61,6 @@
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-                return i.color;
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
